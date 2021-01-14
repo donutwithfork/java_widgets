@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# нет ну по идее должно работать)
+
+exec "mvn test" && 
+  "mvn jacoco:report" && 
+  "mv target/site/jacoco/jacoco.xml cov.xml -Force" &&
+  "mv target/site/jacoco/index.html ./codeCoverageResult/index.html -Force"

@@ -1,0 +1,95 @@
+:spring_boot_version: 2.3.3.RELEASE
+:spring-boot: https://github.com/spring-projects/spring-boot
+:toc:
+:icons: font
+:source-highlighter: prettify
+:project_id: gs-spring-boot
+
+asfasf
+
+== What You Will build
+
+You will build a simple web application with Spring Boot and add some useful services to
+it.
+
+== What You Need
+
+:java_version: 1.8
+include::https://raw.githubusercontent.com/spring-guides/getting-started-macros/master/prereq_editor_jdk_buildtools.adoc[]
+
+include::https://raw.githubusercontent.com/spring-guides/getting-started-macros/master/how_to_complete_this_guide.adoc[]
+
+== Learn What You Can Do with Spring Boot
+
+бла бла
+
+- 1
+- 2
+- 3
+
+[[scratch]]
+== asf
+
+asfasf
+
+
+== JAR Support and Groovy Support
+
+The last example showed how Spring Boot lets you wire beans that you may not be aware you
+need. It also showed how to turn on convenient management services.
+
+
+
+== Code coverage
+Тут я не догнал как лучше сделать чтобы не сильно сторонние либы юзать
+нашёл вот эту штуку https://github.com/ryanluker/vscode-coverage-gutters
+
+TL;DR актуальная версия результатов code coverage можно найти в директории codeCoverageResult и открыть index.html
+
+Чтобы сгенерить новую, делаем:
+
+Win:
+====
+[source,bash]
+----
+.\run_code_coverage.cmd
+----
+====
+
+Mac or Linux (на линухе не проверял):
+====
+[source,bash]
+----
+sh code_coverage
+----
+====
+
+
+
+
+====
+[source,bash]
+----
+.\mvnw spring-boot:run
+----
+====
+
+
+====
+[source,java]
+----
+@RestController
+class ThisWillActuallyRun {
+
+    @RequestMapping("/")
+    String home() {
+        return "Hello, World!"
+    }
+
+}
+----
+====
+
+NOTE: It does not matter where the file is. You can even fit an application that small
+inside a https://twitter.com/rob_winch/status/364871658483351552[single tweet]!
+
