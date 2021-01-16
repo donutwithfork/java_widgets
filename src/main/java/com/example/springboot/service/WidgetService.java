@@ -2,6 +2,7 @@ package com.example.springboot.service;
 
 import java.util.Collection;
 
+import com.example.springboot.exception.WidgetNotFoundException;
 import com.example.springboot.model.Widget;
 import com.example.springboot.repository.WidgetStorageInterface;
 
@@ -9,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-public class WidgetService {	
+public class WidgetService {
 	private WidgetStorageInterface widgetStorage;
 
 	@Autowired
@@ -21,8 +22,8 @@ public class WidgetService {
 		return this.widgetStorage.getWidgetList();
 	}
 
-	public Widget removeWidgetById(int id) {
-		return this.widgetStorage.removeWidgetById(id);
+	public void removeWidgetById(int id) throws WidgetNotFoundException {
+		this.widgetStorage.removeWidgetById(id);
 	}
 
 
@@ -34,7 +35,7 @@ public class WidgetService {
 		return widget;
 	}
 	
-	public Widget updateWidget(Widget widgetDto) {
+	public Widget updateWidget(Widget widgetDto) throws WidgetNotFoundException {
 		Widget actualWidget = this.widgetStorage.findWidgetById(widgetDto.getId());
 
 		if (actualWidget == null) {
@@ -45,6 +46,6 @@ public class WidgetService {
 	}
 
 	public Widget saveWidget(Widget newWidgetDto) {
-		return this.widgetStorage.saveWidget(newWidgetDto);
+		return this.widgetStorage.addNewWidget(newWidgetDto);
 	}
 }

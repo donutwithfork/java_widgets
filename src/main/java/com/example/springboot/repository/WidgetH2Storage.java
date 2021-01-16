@@ -21,15 +21,14 @@ public class WidgetH2Storage implements WidgetStorageInterface
 	}
 
 	@Override
-	public Widget saveWidget(Widget newWidgetDto) {
+	public Widget addNewWidget(Widget newWidgetDto) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Widget removeWidgetById(int id) {
+	public void removeWidgetById(int id) {
 		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

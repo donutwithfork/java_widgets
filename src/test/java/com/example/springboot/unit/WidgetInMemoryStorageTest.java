@@ -7,6 +7,7 @@ import java.util.List;
 import com.tngtech.java.junit.dataprovider.DataProvider;
 import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import com.tngtech.java.junit.dataprovider.UseDataProvider;
+import com.example.springboot.exception.WidgetNotFoundException;
 import com.example.springboot.model.Widget;
 import com.example.springboot.repository.WidgetInMemoryStorage;
 
@@ -16,20 +17,18 @@ import org.junit.runner.RunWith;
 import junit.framework.TestCase;
 
 @RunWith(DataProviderRunner.class)
-public class WidgetInMemoryStorageTest extends TestCase 
-{
+public class WidgetInMemoryStorageTest extends TestCase {
     WidgetInMemoryStorage storage;
 
     @Test
     @UseDataProvider("createWidgetDataProvider")
-    public void testCreateWidgetInsert(Widget widgetInsert, List<Widget> widgetList, Integer[] expectedOrder)
-    {
+    public void testCreateWidgetInsert(Widget widgetInsert, List<Widget> widgetList, Integer[] expectedOrder) {
         this.storage = new WidgetInMemoryStorage();
         for (int i = 0; i < widgetList.size(); i++) {
-            storage.saveWidget(widgetList.get(i));
+            storage.addNewWidget(widgetList.get(i));
         }
 
-        storage.saveWidget(widgetInsert);
+        storage.addNewWidget(widgetInsert);
         assertEquals(expectedOrder.length, storage.getWidgetTree().size());
         assertArrayEquals(storage.getWidgetTree().keySet().toArray(new Integer[0]), expectedOrder);
     }
@@ -37,10 +36,11 @@ public class WidgetInMemoryStorageTest extends TestCase
     @Test
     @UseDataProvider("updateWidgetDataProvider")
     public void testUpdateWidgetInsert(Widget updatedWidget, List<Widget> widgetList, Integer[] expectedOrder)
+            throws WidgetNotFoundException
     {
         this.storage = new WidgetInMemoryStorage();
         for (int i = 0; i < widgetList.size(); i++) {
-            storage.saveWidget(widgetList.get(i));
+            storage.addNewWidget(widgetList.get(i));
         }
         
         this.storage.updateWidget(updatedWidget, storage.findWidgetById(updatedWidget.getId()));
@@ -55,7 +55,7 @@ public class WidgetInMemoryStorageTest extends TestCase
     {
         this.storage = new WidgetInMemoryStorage();
         for (int i = 0; i < widgetList.size(); i++) {
-            storage.saveWidget(widgetList.get(i));
+            storage.addNewWidget(widgetList.get(i));
         }
         
         Widget widget = this.storage.findWidgetById(searchId);

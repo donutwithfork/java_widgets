@@ -1,0 +1,210 @@
+_type: export
+__export_format: 4
+__export_date: 2021-01-14T19:02:27.286Z
+__export_source: insomnia.desktop.app:v2020.5.2
+resources:
+  - _id: req_7a860a9c1f02405fb12d5f8c2fb9bcae
+    parentId: fld_325096b16121469eb9c5f6c89d333716
+    modified: 1610552190594
+    created: 1610221842771
+    url: http://localhost:8080/widget/0
+    name: Update Widget
+    description: ""
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"xCoord": 1,
+        	"yCoord": 1,
+        	"width": 4,
+        	"heigth": 4,
+        	"zIndex": 2
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_10848eb321a44d1e9ebe203b035d5d12
+    authentication: {}
+    metaSortKey: -1610221842771
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_325096b16121469eb9c5f6c89d333716
+    parentId: wrk_60a5778cffea43588317e38ebc6dc748
+    modified: 1610194865728
+    created: 1528721651677
+    name: Miro test
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1528721651677
+    _type: request_group
+  - _id: wrk_60a5778cffea43588317e38ebc6dc748
+    parentId: null
+    modified: 1528721057202
+    created: 1528721057202
+    name: Insomnia
+    description: ""
+    scope: null
+    _type: workspace
+  - _id: req_60efb23e3cb041e89b4c1a873db5cb37
+    parentId: fld_325096b16121469eb9c5f6c89d333716
+    modified: 1610616814161
+    created: 1528721645475
+    url: http://localhost:8080/widget
+    name: create widget
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"xCoord": 1,
+        	"yCoord": 1,
+        	"width": 4,
+        	"heigth": 4,
+        	"zIndex": 2
+        }
+    parameters: []
+    headers:
+      - id: pair_41bac5bd537c488aa7f2c1a18b1a8eea
+        name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1528721651727
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_b4d2c31330c04b649df1ecdd6f2a6720
+    parentId: fld_325096b16121469eb9c5f6c89d333716
+    modified: 1610287790559
+    created: 1610199407492
+    url: http://localhost:8080/widget/1
+    name: get widget by ID
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1528721651702
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_95ec409654194328a8ca9aba6ac48627
+    parentId: fld_325096b16121469eb9c5f6c89d333716
+    modified: 1610538350707
+    created: 1610538348599
+    url: http://localhost:8080/widget
+    name: get widget list
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1528721651695.75
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_ccc8b20c9dba4870b428c4d1173c6615
+    parentId: fld_325096b16121469eb9c5f6c89d333716
+    modified: 1610221098564
+    created: 1610199827390
+    url: http://localhost:8080/widget/1
+    name: delete widget by ID
+    description: ""
+    method: DELETE
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1528721651689.5
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_8421fc9a57a047a3b3b916241190056a
+    parentId: fld_325096b16121469eb9c5f6c89d333716
+    modified: 1610650380010
+    created: 1610223041826
+    url: http://localhost:8080/widget
+    name: create widget without z-index
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"xCoord": 3,
+        	"yCoord": 2,
+        	"width": 4,
+        	"heigth": 4
+        }
+    parameters: []
+    headers:
+      - id: pair_41bac5bd537c488aa7f2c1a18b1a8eea
+        name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1528721651639.5
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: env_78d45e3aef004e02bb7a0a045dd09905
+    parentId: wrk_60a5778cffea43588317e38ebc6dc748
+    modified: 1528721057248
+    created: 1528721057248
+    name: New Environment
+    data: {}
+    dataPropertyOrder: null
+    color: null
+    isPrivate: false
+    metaSortKey: 1610650947338
+    _type: environment
+  - _id: jar_85805c6e2f2a4287b765b1628c8869f3
+    parentId: wrk_60a5778cffea43588317e38ebc6dc748
+    modified: 1528721057395
+    created: 1528721057395
+    name: Default Jar
+    cookies: []
+    _type: cookie_jar
+  - _id: spc_e8049370a2fe4b229d0d8318c32d8d21
+    parentId: wrk_60a5778cffea43588317e38ebc6dc748
+    modified: 1610194469873
+    created: 1610194469873
+    fileName: Insomnia
+    contents: ""
+    contentType: yaml
+    _type: api_spec

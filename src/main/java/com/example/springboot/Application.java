@@ -9,7 +9,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 
-import com.example.springboot.controller.WidgetController;
 import com.example.springboot.repository.WidgetInMemoryStorage;
 import com.example.springboot.service.WidgetService;
 
@@ -21,7 +20,8 @@ public class Application {
 	}
 
 	// а вот тут я не понял(
-	// когда распихал зависимости и по директориям разнёс начали сыпать исключения мол "ты шо тут уже есть контроллер, покайся"
+	// всё было хорошо и красиво, а потом я настроил зависимости через Bean вместо прямого Autowire
+	// и по директориям разнёс начали сыпать исключения мол "ты шо тут уже есть контроллер, покайся"
 	// wut?
 	// @Bean
     // public WidgetController WidgetController() {
