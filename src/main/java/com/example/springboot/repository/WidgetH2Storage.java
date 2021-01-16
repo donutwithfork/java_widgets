@@ -7,6 +7,7 @@ import com.example.springboot.model.Widget;
 
 public class WidgetH2Storage implements WidgetStorageInterface
 {
+	// тут надо запилить работу с h2 грамотно
 
 	@Override
 	public Collection<Widget> getWidgetList() {
