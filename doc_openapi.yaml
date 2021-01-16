@@ -1,0 +1,129 @@
+openapi: 3.0.0
+info:
+  description: "This is Swagger doc for test task in Miro"
+  version: "1.0.3"
+  title: "Swagger Miro test"
+  contact:
+    email: "rostovsahsa@gmail.com"
+tags:
+- name: "Widget"
+  description: "Widget"
+servers:
+  - url: 'http://localhost:8080'
+components:
+  parameters:
+    widget_id:
+      name: widget_id
+      in: path
+      required: true
+      description: widget ID
+      schema:
+        type: integer
+        default: 1
+  schemas:
+    widget:
+      type: "object"
+      required:
+      - "name"
+      - "photoUrls"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        xCoord:
+          type: "integer"
+          example: 5
+        yCoord:
+          type: "integer"
+          example: 2
+        width:
+          type: "integer"
+          example: 2
+        heigth:
+          type: "integer"
+          example: 3
+        zIndex:
+          type: "integer"
+          example: 3
+paths:
+  '/widget':
+    post:
+      tags:
+      - "Widget"
+      summary: "Add a new widget to the store"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/widget'
+            example:
+              xCoord: 2
+              yCoord: 2
+              width: 3
+              heigth: 4
+              zIndex: 5
+      description: ""
+      operationId: "addWidget"
+      responses:
+        "404":
+          description: "Invalid input"
+    get:
+      tags:
+      - "Widget"
+      summary: "Get Widget list"
+      description: "List sorted by zIndex"
+      operationId: "getWidgetList"
+      responses:
+        "200":
+          description: "success"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: '#/components/schemas/widget'
+  '/widget/{widget_id}':
+    get:
+      tags:
+      - "Widget"
+      summary: "Find widget by ID"
+      description: "Returns a single widget"
+      operationId: "getwidgetById"
+      parameters:
+      - $ref: '#/components/parameters/widget_id'
+      responses:
+        "200":
+          description: "successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/widget'
+        "404":
+          description: "widget not found"
+    put:
+      tags:
+      - "Widget"
+      summary: "Updates a widget by Id"
+      description: ""
+      operationId: "updateWidget"
+      parameters:
+      - $ref: '#/components/parameters/widget_id'
+      responses:
+        "405":
+          description: "Invalid input"
+    delete:
+      tags:
+      - "Widget"
+      summary: "Delete a widget"
+      description: ""
+      operationId: "deleteWidgetById"
+      parameters:
+      - $ref: '#/components/parameters/widget_id'
+      responses:
+        "204":
+          description: "Successfuly deleted"
+        "404":
+          description: "widget not found"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"

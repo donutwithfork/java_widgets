@@ -11,5 +11,5 @@ import junit.framework.TestCase;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({WidgetInMemoryStorageTest.class, WidgetControllerInMemoryStorageTest.class})
 public class ApplicationTest extends TestCase {
-
+    
 }

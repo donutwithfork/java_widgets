@@ -7,23 +7,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Widget 
 {
-
-	// @JsonProperty("id")
 	private final int id;
 
-	// @JsonProperty("xCoord")
 	private int xCoord;
 
-	// @JsonProperty("yCoord")
 	private int yCoord;
 
-	// @JsonProperty("width")
 	private int width;
 
-	// @JsonProperty("heigth")
 	private int heigth;
 
-	// @JsonProperty("zIndex")
 	private int zIndex;
 
 	@JsonCreator
@@ -125,6 +118,4 @@ public class Widget
 	public void incrementZIndex() {
 		this.zIndex++;
 	  }
-	
-
 }

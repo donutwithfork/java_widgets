@@ -2,40 +2,39 @@ package com.example.springboot;
 
 import java.util.Arrays;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 
-import com.example.springboot.controller.WidgetController;
-import com.example.springboot.repository.WidgetInMemoryStorage;
+import com.example.springboot.exception.WrongStorageConfigurationException;
+import com.example.springboot.repository.WidgetStorageFactory;
+import com.example.springboot.repository.WidgetStorageInterface;
 import com.example.springboot.service.WidgetService;
 
 @SpringBootApplication
+@PropertySource("classpath:application.properties")
 public class Application {
+
+	@Value("${dbType}")
+	private String dbType;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
 
-	// а вот тут я не понял(
-	// когда распихал зависимости и по директориям разнёс начали сыпать исключения мол "ты шо тут уже есть контроллер, покайся"
-	// wut?
-	// @Bean
-    // public WidgetController WidgetController() {
-    //     return new WidgetController(WidgetService());
-	// }
-	
 	@Bean
-    public WidgetService WidgetService() {
-        return new WidgetService(WidgetInMemoryStorage());
-    }
+	public WidgetService WidgetService() throws WrongStorageConfigurationException {
+		return new WidgetService(WidgetStorage());
+	}
 
 	@Bean
-    public WidgetInMemoryStorage WidgetInMemoryStorage() {
-        return new WidgetInMemoryStorage();
+	public WidgetStorageInterface WidgetStorage() throws WrongStorageConfigurationException {
+		return new WidgetStorageFactory(this.dbType).getImplementation();
     }
 
 	@Bean

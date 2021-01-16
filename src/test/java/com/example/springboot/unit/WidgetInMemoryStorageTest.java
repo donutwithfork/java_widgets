@@ -7,29 +7,30 @@ import java.util.List;
 import com.tngtech.java.junit.dataprovider.DataProvider;
 import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import com.tngtech.java.junit.dataprovider.UseDataProvider;
+import com.example.springboot.exception.WidgetNotFoundException;
 import com.example.springboot.model.Widget;
 import com.example.springboot.repository.WidgetInMemoryStorage;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.test.context.ActiveProfiles;
 
 import junit.framework.TestCase;
 
 @RunWith(DataProviderRunner.class)
-public class WidgetInMemoryStorageTest extends TestCase 
-{
+@ActiveProfiles("test")
+public class WidgetInMemoryStorageTest extends TestCase {
     WidgetInMemoryStorage storage;
 
     @Test
     @UseDataProvider("createWidgetDataProvider")
-    public void testCreateWidgetInsert(Widget widgetInsert, List<Widget> widgetList, Integer[] expectedOrder)
-    {
+    public void testCreateWidgetInsert(Widget widgetInsert, List<Widget> widgetList, Integer[] expectedOrder) {
         this.storage = new WidgetInMemoryStorage();
         for (int i = 0; i < widgetList.size(); i++) {
-            storage.saveWidget(widgetList.get(i));
+            storage.addNewWidget(widgetList.get(i));
         }
 
-        storage.saveWidget(widgetInsert);
+        storage.addNewWidget(widgetInsert);
         assertEquals(expectedOrder.length, storage.getWidgetTree().size());
         assertArrayEquals(storage.getWidgetTree().keySet().toArray(new Integer[0]), expectedOrder);
     }
@@ -37,10 +38,11 @@ public class WidgetInMemoryStorageTest extends TestCase
     @Test
     @UseDataProvider("updateWidgetDataProvider")
     public void testUpdateWidgetInsert(Widget updatedWidget, List<Widget> widgetList, Integer[] expectedOrder)
+            throws WidgetNotFoundException
     {
         this.storage = new WidgetInMemoryStorage();
         for (int i = 0; i < widgetList.size(); i++) {
-            storage.saveWidget(widgetList.get(i));
+            storage.addNewWidget(widgetList.get(i));
         }
         
         this.storage.updateWidget(updatedWidget, storage.findWidgetById(updatedWidget.getId()));
@@ -55,7 +57,7 @@ public class WidgetInMemoryStorageTest extends TestCase
     {
         this.storage = new WidgetInMemoryStorage();
         for (int i = 0; i < widgetList.size(); i++) {
-            storage.saveWidget(widgetList.get(i));
+            storage.addNewWidget(widgetList.get(i));
         }
         
         Widget widget = this.storage.findWidgetById(searchId);
@@ -64,6 +66,22 @@ public class WidgetInMemoryStorageTest extends TestCase
         assertEquals(expectedWidget.getId(), widget.getId());
         
         assertEquals(expectedWidget, widget);
+    }
+
+    @Test
+    @UseDataProvider("removeWidgetByIdDataProvider")
+    public void testRemoveWidgetById(List<Widget> widgetList, int expectedWidgetCount, Integer[] removeIdList)
+            throws WidgetNotFoundException
+    {
+        this.storage = new WidgetInMemoryStorage();
+        for (int i = 0; i < widgetList.size(); i++) {
+            storage.addNewWidget(widgetList.get(i));
+        }
+        for (int r = 0; r < removeIdList.length; r++) {
+            this.storage.removeWidgetById(removeIdList[r]);
+        }
+
+        assertEquals(expectedWidgetCount, this.storage.getWidgetTree().size());
     }
 
 
@@ -223,6 +241,39 @@ public class WidgetInMemoryStorageTest extends TestCase
             {widgetList1, expectedWidget1, searchId1},
             {widgetList2, expectedWidget2, searchId2},
             {widgetList3, expectedWidget3, searchId3},
+            
+        };
+    }
+
+    @DataProvider
+    public static Object[] removeWidgetByIdDataProvider() 
+    {
+        List<Widget> widgetList1 = new ArrayList<Widget>();
+        widgetList1.add(getWidgetFor(0, 0));
+        widgetList1.add(getWidgetFor(1, 1));
+        widgetList1.add(getWidgetFor(2, 2));
+        int expectedWidgetCount1 = 2;
+        Integer[] removeIds1 = {0};
+
+        List<Widget> widgetList2 = new ArrayList<Widget>();
+        widgetList2.add(getWidgetFor(0, 0));
+        widgetList2.add(getWidgetFor(1, 1));
+        widgetList2.add(getWidgetFor(2, 2));
+        int expectedWidgetCount2 = 0;
+        Integer[] removeIds2 = {0, 1, 2};
+
+        List<Widget> widgetList3 = new ArrayList<Widget>();
+        widgetList3.add(getWidgetFor(0, 0));
+        widgetList3.add(getWidgetFor(1, 1));
+        widgetList3.add(getWidgetFor(2, 2));
+        int expectedWidgetCount3 = 2;
+        Integer[] removeIds3 = {2};
+        
+
+        return new Object[][]{
+            {widgetList1, expectedWidgetCount1, removeIds1},
+            {widgetList2, expectedWidgetCount2, removeIds2},
+            {widgetList3, expectedWidgetCount3, removeIds3},
             
         };
     }

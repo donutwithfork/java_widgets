@@ -7,6 +7,7 @@ import java.util.TreeMap;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.example.springboot.exception.WidgetNotFoundException;
 import com.example.springboot.model.Widget;
 
 
@@ -17,8 +18,75 @@ public class WidgetInMemoryStorage implements WidgetStorageInterface
 	private Map<Integer, Widget> widgetHashMap = new HashMap<Integer, Widget>();
 	private TreeMap<Integer, Widget> widgetTree = new TreeMap<Integer,Widget>();
 
-	private int calculateZIndex(int insertedZindex)
-	{
+	@Override
+	public Collection<Widget> getWidgetList() {
+		return this.widgetTree.values();
+	}
+
+	@Override
+	public void removeWidgetById(int id) throws WidgetNotFoundException {
+		synchronized (this) {
+			Widget deletedWidget = this.widgetHashMap.get(id);
+			if (deletedWidget == null) {
+				throw new WidgetNotFoundException();
+			}
+			this.widgetTree.remove(deletedWidget.getZIndex());
+			if (this.widgetTree.size() >= 1 && deletedWidget.getZIndex() == this.maxZIndex) {
+				this.maxZIndex = this.widgetTree.lastKey();
+			}
+			else {
+				this.maxZIndex = 0;
+			}
+			deletedWidget = null;
+			this.widgetHashMap.remove(id);
+		}
+	}
+
+	@Override
+	public Widget findWidgetById(int id) {
+		return this.widgetHashMap.get(id);
+	}
+	
+	@Override
+	public Widget updateWidget(Widget widgetDto, Widget actualWidget) throws WidgetNotFoundException {
+		synchronized (this) {
+			this.widgetTree.remove(actualWidget.getZIndex());
+
+			boolean isZIndexDuplicate = this.widgetTree.containsKey(widgetDto.getZIndex());
+			if (isZIndexDuplicate) {
+				this.updateTreeOnUpdate(actualWidget.getZIndex(), widgetDto.getZIndex());
+			}
+
+			actualWidget.updateData(widgetDto);
+			this.widgetTree.put(actualWidget.getZIndex(), actualWidget);
+
+			return actualWidget;
+		}
+	}
+
+	@Override
+	public Widget addNewWidget(Widget newWidgetDto) {
+		synchronized (this) {
+			Widget newWidget = this.createWidgetFromDto(newWidgetDto);
+			boolean isZIndexDuplicate = this.widgetTree.containsKey(newWidget.getZIndex());
+			
+			if (isZIndexDuplicate) {
+				this.shiftTreeToRight(newWidget.getZIndex());
+			}
+			
+			this.widgetTree.put(newWidget.getZIndex(), newWidget);
+			this.widgetHashMap.put(newWidget.getId(), newWidget);
+
+			return newWidget;
+		}
+	}
+	
+	// пам пам #ForTestingPurpose
+	public TreeMap<Integer, Widget> getWidgetTree() {
+		return this.widgetTree;
+	}
+
+	private int calculateZIndex(int insertedZindex) {
 		int zIndex = insertedZindex;
 		if (this.maxZIndex > 0 && zIndex == 0) {
 			this.maxZIndex++;
@@ -27,53 +95,6 @@ public class WidgetInMemoryStorage implements WidgetStorageInterface
 			this.maxZIndex = zIndex;
 		}
 		return zIndex;
-	}
-	
-	@Override
-	public Collection<Widget> getWidgetList() {
-		// TODO Auto-generated method stub
-		return this.widgetTree.values();
-	}
-
-	@Override
-	public Widget removeWidgetById(int id) {
-		return this.widgetHashMap.remove(id);
-	}
-
-	@Override
-	public Widget findWidgetById(int id) {
-		return this.widgetHashMap.get(id);
-	}
-	
-	// ЧЕКНУТЬ скорей всего не работает
-	@Override
-	public Widget updateWidget(Widget widgetDto, Widget actualWidget) {
-		this.widgetTree.remove(actualWidget.getZIndex());
-
-		boolean isZIndexDuplicate = this.widgetTree.containsKey(widgetDto.getZIndex());
-		if (isZIndexDuplicate) {
-			this.updateTreeOnUpdate(actualWidget.getZIndex(), widgetDto.getZIndex());
-		}
-
-		actualWidget.updateData(widgetDto);
-		this.widgetTree.put(actualWidget.getZIndex(), actualWidget);
-
-		return actualWidget;
-	}
-
-	@Override
-	public Widget saveWidget(Widget newWidgetDto) {
-		Widget newWidget = this.createWidgetFromDto(newWidgetDto);
-		boolean isZIndexDuplicate = this.widgetTree.containsKey(newWidget.getZIndex());
-		
-		if (isZIndexDuplicate) {
-			this.shiftTreeToRight(newWidget.getZIndex());
-		}
-		
-		this.widgetTree.put(newWidget.getZIndex(), newWidget);
-		this.widgetHashMap.put(newWidget.getId(), newWidget);
-
-		return newWidget;
 	}
 
 	private Widget createWidgetFromDto(Widget newWidgetDto) {
@@ -116,16 +137,11 @@ public class WidgetInMemoryStorage implements WidgetStorageInterface
 	*/
 	private void shiftTreeValues(int shiftLastIndex, int shiftFirstIndex) {
 		widgetTree.put(shiftLastIndex, new Widget(0, 0, 0, 0, 0, shiftLastIndex));
-		for (int counter = shiftLastIndex; counter > shiftFirstIndex ; counter--) {
+		for (int counter = shiftLastIndex; counter > shiftFirstIndex; counter--) {
 			Widget movedWidget = this.widgetTree.get(counter - 1);
 			movedWidget.incrementZIndex();
 			this.widgetTree.replace(counter, movedWidget);
 		}
 		this.maxZIndex++;
-	}
-
-	// пам пам #ForTestingPurpose
-	public TreeMap<Integer, Widget> getWidgetTree() {
-		return this.widgetTree;
 	}
 }

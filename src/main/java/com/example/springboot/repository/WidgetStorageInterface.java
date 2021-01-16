@@ -2,6 +2,7 @@ package com.example.springboot.repository;
 
 import java.util.Collection;
 
+import com.example.springboot.exception.WidgetNotFoundException;
 import com.example.springboot.model.Widget;
 
 public interface WidgetStorageInterface 
@@ -10,9 +11,9 @@ public interface WidgetStorageInterface
 
 	public Widget findWidgetById(int id);
 
-	public Widget saveWidget(Widget newWidgetDto);
+	public Widget addNewWidget(Widget newWidgetDto);
 
-	public Widget updateWidget(Widget widgetDto, Widget actualWidget);
+	public Widget updateWidget(Widget widgetDto, Widget actualWidget) throws WidgetNotFoundException;
 
-	public Widget removeWidgetById(int id);
+	public void removeWidgetById(int id) throws WidgetNotFoundException;
 }
