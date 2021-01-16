@@ -24,18 +24,22 @@ public class WidgetInMemoryStorage implements WidgetStorageInterface
 	}
 
 	@Override
-	public synchronized void removeWidgetById(int id) throws WidgetNotFoundException {
-		Widget deletedWidget = this.widgetHashMap.get(id);
-		if (deletedWidget == null) {
-			throw new WidgetNotFoundException();
+	public void removeWidgetById(int id) throws WidgetNotFoundException {
+		synchronized (this) {
+			Widget deletedWidget = this.widgetHashMap.get(id);
+			if (deletedWidget == null) {
+				throw new WidgetNotFoundException();
+			}
+			this.widgetTree.remove(deletedWidget.getZIndex());
+			if (this.widgetTree.size() >= 1 && deletedWidget.getZIndex() == this.maxZIndex) {
+				this.maxZIndex = this.widgetTree.lastKey();
+			}
+			else {
+				this.maxZIndex = 0;
+			}
+			deletedWidget = null;
+			this.widgetHashMap.remove(id);
 		}
-		this.widgetTree.remove(deletedWidget.getZIndex());
-		if (deletedWidget.getZIndex() == this.maxZIndex) {
-			this.maxZIndex = this.widgetTree.lastKey();
-		}
-		deletedWidget = null;
-		this.widgetHashMap.remove(id);
-		
 	}
 
 	@Override
@@ -44,33 +48,37 @@ public class WidgetInMemoryStorage implements WidgetStorageInterface
 	}
 	
 	@Override
-	public synchronized Widget updateWidget(Widget widgetDto, Widget actualWidget) throws WidgetNotFoundException {
-		this.widgetTree.remove(actualWidget.getZIndex());
+	public Widget updateWidget(Widget widgetDto, Widget actualWidget) throws WidgetNotFoundException {
+		synchronized (this) {
+			this.widgetTree.remove(actualWidget.getZIndex());
 
-		boolean isZIndexDuplicate = this.widgetTree.containsKey(widgetDto.getZIndex());
-		if (isZIndexDuplicate) {
-			this.updateTreeOnUpdate(actualWidget.getZIndex(), widgetDto.getZIndex());
+			boolean isZIndexDuplicate = this.widgetTree.containsKey(widgetDto.getZIndex());
+			if (isZIndexDuplicate) {
+				this.updateTreeOnUpdate(actualWidget.getZIndex(), widgetDto.getZIndex());
+			}
+
+			actualWidget.updateData(widgetDto);
+			this.widgetTree.put(actualWidget.getZIndex(), actualWidget);
+
+			return actualWidget;
 		}
-
-		actualWidget.updateData(widgetDto);
-		this.widgetTree.put(actualWidget.getZIndex(), actualWidget);
-
-		return actualWidget;
 	}
 
 	@Override
-	public synchronized Widget addNewWidget(Widget newWidgetDto) {
-		Widget newWidget = this.createWidgetFromDto(newWidgetDto);
-		boolean isZIndexDuplicate = this.widgetTree.containsKey(newWidget.getZIndex());
-		
-		if (isZIndexDuplicate) {
-			this.shiftTreeToRight(newWidget.getZIndex());
-		}
-		
-		this.widgetTree.put(newWidget.getZIndex(), newWidget);
-		this.widgetHashMap.put(newWidget.getId(), newWidget);
+	public Widget addNewWidget(Widget newWidgetDto) {
+		synchronized (this) {
+			Widget newWidget = this.createWidgetFromDto(newWidgetDto);
+			boolean isZIndexDuplicate = this.widgetTree.containsKey(newWidget.getZIndex());
+			
+			if (isZIndexDuplicate) {
+				this.shiftTreeToRight(newWidget.getZIndex());
+			}
+			
+			this.widgetTree.put(newWidget.getZIndex(), newWidget);
+			this.widgetHashMap.put(newWidget.getId(), newWidget);
 
-		return newWidget;
+			return newWidget;
+		}
 	}
 	
 	// пам пам #ForTestingPurpose
@@ -115,22 +123,6 @@ public class WidgetInMemoryStorage implements WidgetStorageInterface
 		for (Entry<Integer, Widget> entry : this.widgetTree.entrySet()) {
 			insertIndex = entry.getKey() > insertIndex + 1 ? entry.getKey() : insertIndex;
 		}
-
-		// тут жёстко
-
-		// 1) инсерт х2 одного
-		// {
-		// 	"xCoord": 1,
-		// 	"yCoord": 1,
-		// 	"width": 4,
-		// 	"heigth": 4,
-		// 	"zIndex": 1
-		// }
-
-		// 2) удаляем 0 элемент
-
-		// добавляем третий раз
-		// 500
 
 		if (insertIndex <= this.maxZIndex) {
 			insertIndex = this.maxZIndex + 1;

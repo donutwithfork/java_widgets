@@ -22,7 +22,9 @@ Mac\linux (win powershell)
 
 ## Чего сделал:
 
-Основные требования вроде есть, виджеты создаются, по zIndex сортируются, вправо смещаются
+Основные требования вроде есть, виджеты создаются, по zIndex сортируются, вправо смещаются.
+
+Атомарность гугл очень убедительно советовал делать через syncronized(this). Также видел реализацию локов. Предположил что этот вариант должен идеально сработать.
 
 Проверил работоспособность на win и mac (если при проверке не заведется, то проблема на вашей стороне :D )
 
@@ -30,14 +32,12 @@ Mac\linux (win powershell)
 
 - лимиты  ->  неа
 - фильтрация  ->  неа
-- новое хранилище ->  ща посмотрим, звучит интересно
+- новое хранилище ->  начал делать, но понял бессмысленность бытия
 
 
 ## Как проверить
 
-Примеры запросов сделал в Insomnia формате (точно работает) и в open-api (не проверял)
-
-Файлы в корне проекта, doc_insomnia.yaml и doc_openapi.yaml
+Примеры запросов сделал в Insomnia формате (тестил запросы тут) и в open-api (выполнение запросов не чекал). Файлы лежат в корне проекта, doc_insomnia.yaml и doc_openapi.yaml.
 
 Красочно расписывать доку не буду, но приведу примеры всех запросов
 
@@ -52,11 +52,11 @@ Request Body:
 
 ```javascript
 {
-	"xCoord": 1,
-	"yCoord": 1,
-	"width": 4,
-	"heigth": 4,
-	"zIndex": 1
+    "xCoord": 1,
+    "yCoord": 1,
+    "width": 4,
+    "heigth": 4,
+    "zIndex": 1
 }
 ```
 
@@ -64,12 +64,12 @@ Response Body:
 
 ```javascript
 {
-  "id": 0,
-  "xCoord": 1,
-  "yCoord": 1,
-  "width": 4,
-  "heigth": 4,
-  "zIndex": 1
+    "id": 0,
+    "xCoord": 1,
+    "yCoord": 1,
+    "width": 4,
+    "heigth": 4,
+    "zIndex": 1
 }
 ```
 
@@ -83,11 +83,11 @@ Request Body:
 
 ```javascript
 {
-	"xCoord": 1,
-	"yCoord": 1,
-	"width": 6,
-	"heigth": 6,
-	"zIndex": 1
+    "xCoord": 1,
+    "yCoord": 1,
+    "width": 6,
+    "heigth": 6,
+    "zIndex": 1
 }
 ```
 
@@ -95,12 +95,12 @@ Response Body:
 
 ```javascript
 {
-  "id": 0,
-  "xCoord": 1,
-  "yCoord": 1,
-  "width": 6,
-  "heigth": 6,
-  "zIndex": 1
+    "id": 0,
+    "xCoord": 1,
+    "yCoord": 1,
+    "width": 6,
+    "heigth": 6,
+    "zIndex": 1
 }
 ```
 
@@ -117,19 +117,19 @@ Response Body:
 [
     {
         "id": 0,
-    	"xCoord": 1,
-    	"yCoord": 1,
-    	"width": 4,
-    	"heigth": 4,
-    	"zIndex": 1
+        "xCoord": 1,
+        "yCoord": 1,
+        "width": 4,
+        "heigth": 4,
+        "zIndex": 1
     },
     {
         "id": 1,
-    	"xCoord": 2,
-    	"yCoord": 2,
-    	"width": 1,
-    	"heigth": 1,
-    	"zIndex": 2
+        "xCoord": 2,
+        "yCoord": 2,
+        "width": 1,
+        "heigth": 1,
+        "zIndex": 2
     },
 ]
 ```
@@ -145,11 +145,11 @@ Response Body:
 ```javascript
 {
     "id": 0,
-	"xCoord": 1,
-	"yCoord": 1,
-	"width": 4,
-	"heigth": 4,
-	"zIndex": 1
+    "xCoord": 1,
+    "yCoord": 1,
+    "width": 4,
+    "heigth": 4,
+    "zIndex": 1
 }
 ```
 
