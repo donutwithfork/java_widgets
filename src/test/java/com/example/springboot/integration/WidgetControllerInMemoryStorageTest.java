@@ -3,6 +3,7 @@ package com.example.springboot.integration;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -42,6 +43,43 @@ public class WidgetControllerInMemoryStorageTest {
         String actualResponseBody = mvcResult.getResponse().getContentAsString();
         Widget[] listResult = mapper.readValue(actualResponseBody, Widget[].class);
         assertEquals(0, listResult.length);
+    }
+
+    @Test
+    public void deleteNonExistedWidgetTest() throws Exception {
+        this.mockMvc.perform(delete("/widget/0")).andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void updateNonExistedWidgetTest() throws Exception {
+        Widget updateWidgetDto = new Widget(0, 5, 5, 5, 5, 2);
+        String json = this.mapper.writeValueAsString(updateWidgetDto);
+
+        this.mockMvc.perform(put("/widget/0")
+                .contentType("application/json")
+                .content(json)
+            )
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void updateWidgetSuccessTest() throws Exception {
+        Widget expectedWidget = new Widget(0, 1, 1, 4, 4, 2);
+        Widget widgetDto = new Widget(0, 1, 1, 4, 4, 2);
+        this.createWidgetTest(widgetDto, expectedWidget);
+
+        Widget updateWidgetDto = new Widget(0, 5, 5, 5, 5, 2);
+        String json = this.mapper.writeValueAsString(updateWidgetDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(put("/widget/0")
+                .contentType("application/json")
+                .content(json)
+            )
+            .andExpect(status().isOk())
+            .andReturn();
+        String actualResponseBody = mvcResult.getResponse().getContentAsString();
+        Widget responseWidget = this.mapper.readValue(actualResponseBody, Widget.class);
+        assertEquals(updateWidgetDto, responseWidget);
     }
 
     @Test
